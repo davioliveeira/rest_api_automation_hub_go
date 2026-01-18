@@ -5,12 +5,23 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/davioliveira/rest_api_automation_hub_go/internal/engine"
+	"github.com/davioliveira/rest_api_automation_hub_go/internal/tasks"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	slog.SetDefault(logger)
+
+	// Initialize task registry
+	registry := engine.NewRegistry()
+
+	// Register task executors
+	tasks.RegisterHTTPTask(registry) // Story 2.1
+
+	// Create engine with registry
+	_ = engine.NewEngine(registry) // Will be used in Epic 3 for workflow execution
 
 	router := setupRouter()
 	port := getPort()
