@@ -1,0 +1,63 @@
+{
+  "name": "airbnb-price-monitor",
+  "tasks": [
+    {
+      "id": "fetch_listings",
+      "type": "http_request",
+      "config": {
+        "method": "GET",
+        "url": "{{MOCK_SERVER_URL}}"
+      }
+    },
+    {
+      "id": "parse_listings",
+      "type": "html_parser",
+      "config": {
+        "html_source": "fetch_listings_result",
+        "selectors": [
+          {
+            "name": "titles",
+            "selector": ".listing-title",
+            "multiple": true
+          },
+          {
+            "name": "prices",
+            "selector": ".price-amount",
+            "multiple": true
+          },
+          {
+            "name": "locations",
+            "selector": ".listing-location",
+            "multiple": true
+          },
+          {
+            "name": "ratings",
+            "selector": ".rating-score",
+            "multiple": true
+          },
+          {
+            "name": "images",
+            "selector": ".listing-image",
+            "attribute": "src",
+            "multiple": true
+          },
+          {
+            "name": "urls",
+            "selector": ".view-link",
+            "attribute": "href",
+            "multiple": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "format_output",
+      "type": "transform",
+      "config": {
+        "data_source": "parse_listings_result",
+        "template": "{\"listing_count\": {{len (index . 0).titles}}, \"listings\": {{json .}}}",
+        "output_format": "json"
+      }
+    }
+  ]
+}
