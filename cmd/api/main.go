@@ -20,6 +20,7 @@ func main() {
 	// Register task executors
 	tasks.RegisterHTTPTask(registry)      // Story 2.1
 	tasks.RegisterTransformTask(registry) // Story 2.2
+	tasks.RegisterHTMLParserTask(registry) // Story 2.3
 
 	// Create engine with registry
 	_ = engine.NewEngine(registry) // Will be used in Epic 3 for workflow execution
